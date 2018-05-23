@@ -1,6 +1,10 @@
 # payments-sample
-Rest API for simple prepaid card
+Rest API for simple prepaid card, used tech stack
 
+- Java
+- Spring Boot
+- JAXRS
+- JPA (Hibernate)
 
 # 1. How to start the application ?
 It is simple just execute  ``mvn spring-boot:run``
@@ -64,7 +68,11 @@ No by default it uses in-memorry database but also it is easy just to change it 
    -H "Authorization:Bearer <TOKEN>" \
  'http://localhost:8080/cards' ``
 
- 
+## Payments list 
+`` curl -i -X GET \
+   -H "Authorization:Bearer <TOKEN>" \
+ 'http://localhost:8080/payments' ``
+
 ## Payment create
 
 `` curl -i -X POST \
