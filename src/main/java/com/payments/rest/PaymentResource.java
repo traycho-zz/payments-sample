@@ -1,5 +1,6 @@
 package com.payments.rest;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -23,7 +24,9 @@ import com.payments.model.Transaction;
 import com.payments.model.User;
 import com.payments.rest.requests.CreatePaymentRequest;
 import com.payments.rest.requests.PaymentRequest;
+import com.payments.rest.responses.PaymentResponse;
 import com.payments.rest.responses.Responses;
+import com.payments.rest.responses.TransactionResponse;
 import com.payments.security.annotations.Secured;
 import com.payments.service.PaymentService;
 
@@ -62,7 +65,13 @@ public class PaymentResource extends BaseResource {
 	public Response get() {
 		User user = currentUser();
 		List<Payment> payments = this.paymentService.findByUser(user.getId());
-		return Responses.ok(payments);
+		
+
+		List<PaymentResponse> responses = new ArrayList<>();
+		for(Payment payment : payments){
+			responses.add(toResponse(payment));
+		}
+		return Responses.ok(responses);
 	}
 	
 	@POST
@@ -70,7 +79,7 @@ public class PaymentResource extends BaseResource {
 	@Path("/{uid}/authorize")
 	public Response authorize(@PathParam(value = "uid") final String uid,PaymentRequest request) {
 		Transaction transaction = this.paymentService.authorize(uid, request.getCard());
-		return Responses.ok(transaction);
+		return Responses.ok(toResponse(transaction));
 	}
 	
 	@POST
@@ -79,7 +88,7 @@ public class PaymentResource extends BaseResource {
 	public Response capture(@PathParam(value = "uid") final String uid,PaymentRequest request) {
 		
 		Transaction transaction = this.paymentService.capture(request.getAmount(), uid,request.getCard());
-		return Responses.ok(transaction);
+		return Responses.ok(toResponse(transaction));
 	}
 	
 	@POST
@@ -87,7 +96,7 @@ public class PaymentResource extends BaseResource {
 	@Path("/{uid}/refund")
 	public Response refund(@PathParam(value = "uid") final String uid,PaymentRequest request) {
 		Transaction transaction = this.paymentService.refund(request.getAmount(), uid,request.getCard());
-		return Responses.ok(transaction);
+		return Responses.ok(toResponse(transaction));
 	}
 	
 	@POST
@@ -95,6 +104,38 @@ public class PaymentResource extends BaseResource {
 	@Path("/{uid}/reverse")
 	public Response reverse(@PathParam(value = "uid") final String uid,PaymentRequest request) {
 		Transaction transaction = this.paymentService.reverse(request.getAmount(), uid,request.getCard());
-		return Responses.ok(transaction);
+		return Responses.ok(toResponse(transaction));
 	}
+	
+	private PaymentResponse toResponse(Payment payment){
+		PaymentResponse response = new PaymentResponse();
+		response.setAmount(payment.getAmount());
+		response.setUid(payment.getUid());
+		response.setAuthorizedAmount(payment.getAuthorizedAmount());
+		response.setCurrency(payment.getCurrency());
+		response.setDescription(payment.getDescription());
+		response.setPaidAmount(payment.getPaidAmount());
+		response.setRefundAmount(payment.getRefundAmount());
+		response.setReversedAmount(payment.getReversedAmount());
+		response.setStatus(payment.getStatus());
+		
+		return response;
+	}
+	
+	private TransactionResponse toResponse(Transaction transaction){
+		TransactionResponse response = new TransactionResponse();
+		response.setAmount(transaction.getAmount());
+		response.setDirection(transaction.getDirection());
+		response.setStatus(transaction.getStatus());
+		response.setType(transaction.getType());
+		response.setUid(transaction.getUuid());
+		
+		Payment payment = transaction.getPayment();
+		if(payment != null){
+			response.setPayment(payment.getUid());
+		}
+		
+		return response;
+	}
+	
 }

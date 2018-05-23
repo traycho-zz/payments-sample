@@ -14,9 +14,6 @@ public class CreatePaymentRequest {
 	
 	@NotNull
 	private String description;
-	
-	@NotNull
-	private String recepient;
 
 	public BigDecimal getAmount() {
 		return amount;
@@ -42,12 +39,5 @@ public class CreatePaymentRequest {
 		this.description = description;
 	}
 
-	public String getRecepient() {
-		return recepient;
-	}
 
-	public void setRecepient(String recepient) {
-		this.recepient = recepient;
-	}
-	
 }
