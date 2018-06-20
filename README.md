@@ -15,118 +15,48 @@ No by default it uses in-memorry database but also it is easy just to change it 
 # 3. How to use the API ?
 
 ## User create
-``curl -i -X POST \
+curl -i -X POST \
    -H "Content-Type:application/json" \
    -d \
 '{
-  "username":"user@payments.com",
-  "password":"password"
+  "name":"Coca-Cola",
+  "city":"London",
+  "address":"Kings Road 15",
+  "country":"United Kingdom",
+  "email":"support@cocacola.com",
+  "phone":"+44 123456789"
 }' \
- 'http://localhost:8080/users'``
+ 'http://localhost:8080/companies'
  
-## User authorize
-``curl -i -X POST \
+## Company update
+curl -i -X PUT \
    -H "Content-Type:application/json" \
    -d \
-'{ 
-  "username":"user@payments.com",
-  "password":"password"
+'{
+  "name":"Coca-Cola 1",
+  "city":"London",
+  "address":"Kings Road 15",
+  "country":"United Kingdom",
+  "email":"support@cocacola.com",
+  "phone":"+44 123456789"
+  
 }' \
- 'http://localhost:8080/authorize'``
+ 'http://localhost:8080/companies/<COMPANY_UID>'
  
-## Card create
-`` curl -i -X POST \
-   -H "Content-Type:application/json" \
-   -H "Authorization:Bearer <TOKEN>" \
-   -d \
-'{
-  "currency":"GBP",
-  "amount":5.5,
-  "description":"Coffee"
-}' \
- 'http://localhost:8080/payments/' ``
+## Comapny details
+curl -i -X GET \
+ 'http://localhost:8080/companies/<COMPANY_UID>'
  
-## Card topup
-`` curl -i -X POST \
+## Company list all
+curl -i -X GET \
+ 'http://localhost:8080/companies'
+
+## Company add owner
+
+curl -i -X POST \
    -H "Content-Type:application/json" \
-   -H "Authorization:Bearer <TOKEN>" \
    -d \
 '{
-  "currency":"GBP",
-  "amount":15
+  "name":"Elon Musk"
 }' \
- 'http://localhost:8080/cards/<CARD_UID>/topup' ``
-
-## Card balance
-
-`` curl -i -X GET \
-   -H "Authorization:Bearer <TOKEN>" \
- 'http://localhost:8080/cards/<CARD_ID>/balance' ``
-
-## Cards list
-`` curl -i -X GET \
-   -H "Authorization:Bearer <TOKEN>" \
- 'http://localhost:8080/cards' ``
-
-## Payments list 
-`` curl -i -X GET \
-   -H "Authorization:Bearer <TOKEN>" \
- 'http://localhost:8080/payments' ``
-
-## Payment create
-
-`` curl -i -X POST \
-   -H "Content-Type:application/json" \
-   -H "Authorization:Bearer <TOKEN>" \
-   -d \
-'{
-  "currency":"GBP",
-  "amount":5.5,
-  "description":"Coffee"
-}' \
- 'http://localhost:8080/payments/' ``
-
-## Payment  authorize
-
-`` curl -i -X POST \
-   -H "Content-Type:application/json" \
-   -H "Authorization:Bearer <TOKEN>" \
-   -d \
-'{
-  "card":"<CARD_UID>"
-}' \
- 'http://localhost:8080/payments/<PAYMENT_UID>/authorize' ``
- 
-## Payment capture
-`` curl -i -X POST \
-   -H "Content-Type:application/json" \
-   -H "Authorization:Bearer <TOKEN>" \
-   -d \
-'{
-  "card":"<CARD_UID>",
-  "amount":"2"
-}' \
- 'http://localhost:8080/payments/<PAYMENT_UID>/capture' ``
-
-## Payment reverse
-
-`` curl -i -X POST \
-   -H "Content-Type:application/json" \
-   -H "Authorization:Bearer <TOKEN>" \
-   -d \
-'{
-  "card":"<CARD_UID>",
-  "amount":"1.5"
-}' \
- 'http://localhost:8080/payments/<PAYMENT_UID>/reverse' `` 
- 
-## Payment Refund
-`` curl -i -X POST \
-   -H "Content-Type:application/json" \
-   -H "Authorization:Bearer <TOKEN>" \
-   -d \
-'{
-  "card":"<CARD_UID>",
-  "amount":"2.0"
-}' \
- 'http://localhost:8080/payments/<PAYMENT_UID>/refund' ``
+ 'http://localhost:8080/companies/02f44f29-1a93-4b35-a049-87707501d1a9/owners'
